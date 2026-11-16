@@ -298,6 +298,16 @@ table.matrix td:nth-child(2) { background: var(--india-soft); }
 .viewer-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
 .viewer.resizing iframe { pointer-events: none; }
 
+.viewer-mode { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 12px; }
+.seg2 { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.seg2 button { border: 0; background: var(--surface); padding: 6px 10px; font-size: 13px; cursor: pointer; color: var(--muted); }
+.seg2 button + button { border-left: 1px solid var(--line); }
+.seg2 button[aria-pressed="true"] { background: var(--ink); color: var(--bg); font-weight: 600; }
+.viewer-blocked { margin-top: 16px; padding: 22px; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--surface-2); display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.viewer-blocked h4 { margin: 0; font-size: 18px; line-height: 1.3; }
+.viewer-blocked p { margin: 0; color: var(--muted); font-size: 14px; }
+.viewer-blocked .btn { margin-top: 6px; }
+
 /* chooser + tooltip */
 .chooser { position: fixed; z-index: 60; width: min(340px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow), 0 12px 40px rgba(0,0,0,.18); padding: 14px; }
 .chooser-kicker { margin: 0; font: 600 11px/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--brass); }
@@ -807,8 +817,22 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
     <button type="button" class="btn" id="viewer-goto">Show in references</button>
   </div>
   <p class="viewer-url" id="viewer-url"></p>
-  <p class="viewer-note">Some official sites refuse to display inside another page. If the area below stays blank or shows an error, use <strong>Open in new tab</strong>.</p>
-  <div class="viewer-frame"><iframe id="viewer-frame" title="Cited report" referrerpolicy="no-referrer"></iframe></div>
+  <div class="viewer-mode" id="viewer-mode" hidden>
+    <span class="lbl">Show this PDF</span>
+    <div class="seg2" role="group" aria-label="How to show this PDF">
+      <button type="button" data-mode="gview" aria-pressed="true">Through Google viewer</button>
+      <button type="button" data-mode="direct" aria-pressed="false">Directly from the site</button>
+    </div>
+    <button type="button" class="btn" id="viewer-reload">Reload</button>
+  </div>
+  <p class="viewer-note" id="viewer-note"></p>
+  <div class="viewer-blocked" id="viewer-blocked" hidden>
+    <p class="lbl">Opens in a new tab only</p>
+    <h4>This website doesn’t allow its pages to be shown inside another site</h4>
+    <p>Indian government sites such as this one block display in side panels for security. The report opens normally in a new tab.</p>
+    <a class="btn primary" id="viewer-blocked-open" href="#" target="_blank" rel="noopener">Open report in new tab ↗</a>
+  </div>
+  <div class="viewer-frame" id="viewer-frame-wrap"><iframe id="viewer-frame" title="Cited report" referrerpolicy="no-referrer"></iframe></div>
 </aside>
 
 <div class="chooser" id="chooser" role="dialog" aria-modal="false" aria-labelledby="chooser-title" hidden>
@@ -913,16 +937,51 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
     if (n == null) return;
     document.querySelectorAll('.cite[data-ref="' + n + '"]').forEach(function (c) { c.classList.add("is-active"); });
   }
+  // Sites that send "do not frame" headers. Their PDFs go through Google's viewer;
+  // their web pages get a clear "open in new tab" card instead of a blank panel.
+  var NO_FRAME = ["gov.in", "nic.in", "sansad.in", "idsa.in"];
+  function hostOf(u) { try { return new URL(u).hostname.toLowerCase(); } catch (e) { return ""; } }
+  function noFrame(u) { var h = hostOf(u); return NO_FRAME.some(function (d) { return h === d || h.slice(-(d.length + 1)) === "." + d; }); }
+  function isPdf(u) { try { return /\.pdf$/i.test(new URL(u).pathname); } catch (e) { return false; } }
+  function gview(u) { return "https://docs.google.com/viewer?embedded=true&url=" + encodeURIComponent(u); }
+  var pdfMode = null;
+  var NOTES = {
+    gview: "This PDF is shown through Google’s PDF viewer, because the official site does not allow direct display. If it says “No preview available” or stays blank, press <strong>Reload</strong> or use <strong>Open in new tab</strong>.",
+    direct: "Shown directly from the official site. If the area below stays blank or shows an error, switch to <strong>Through Google viewer</strong> or use <strong>Open in new tab</strong>.",
+    page: "Some official sites refuse to display inside another page. If the area below stays blank or shows an error, use <strong>Open in new tab</strong>."
+  };
+  function renderViewer(force) {
+    var r = REFS[currentRef]; if (!r) return;
+    var pdf = isPdf(r.url), blocked = noFrame(r.url);
+    var mode = pdf ? (pdfMode || (blocked ? "gview" : "direct")) : null;
+    $("viewer-mode").hidden = !pdf;
+    document.querySelectorAll("#viewer-mode [data-mode]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === mode ? "true" : "false"); });
+    var showCard = !pdf && blocked;
+    $("viewer-blocked").hidden = !showCard;
+    $("viewer-frame-wrap").hidden = showCard;
+    $("viewer-note").hidden = showCard;
+    $("viewer-blocked-open").href = r.url;
+    $("viewer-note").innerHTML = pdf ? NOTES[mode] : NOTES.page;
+    var src = showCard ? null : (mode === "gview" ? gview(r.url) : r.url);
+    if (!src) { frame.removeAttribute("src"); return; }
+    if (force || frame.getAttribute("src") !== src) { frame.removeAttribute("src"); frame.setAttribute("src", src); }
+  }
+  document.querySelectorAll("#viewer-mode [data-mode]").forEach(function (b) {
+    b.addEventListener("click", function () { pdfMode = b.dataset.mode; renderViewer(); });
+  });
+  $("viewer-reload").addEventListener("click", function () { renderViewer(true); });
+
   function openPanel(n) {
     var r = REFS[n]; if (!r) return;
+    if (currentRef !== n) pdfMode = null;
     currentRef = n;
     $("viewer-n").textContent = "[" + n + "]";
     $("viewer-title").textContent = r.title;
     $("viewer-url").textContent = r.url;
     $("viewer-newtab").href = r.url;
-    if (frame.getAttribute("src") !== r.url) frame.setAttribute("src", r.url);
     viewer.hidden = false;
     document.body.classList.add("panel-open");
+    renderViewer();
     markActive(n);
     $("viewer-close").focus({ preventScroll: true });
   }
