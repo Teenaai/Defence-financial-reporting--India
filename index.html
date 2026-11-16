@@ -74,12 +74,9 @@ h1, h2, h3, h4, h5 { font-family: var(--f-display); text-wrap: balance; letter-s
 
 /* masthead */
 .masthead { background: var(--mast); color: var(--mast-ink); }
-.mast-inner { max-width: 1400px; margin: 0 auto; padding-block: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
-.mast-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 16px; }
-.mast-top .eyebrow { margin: 0; }
-.masthead h1 { font-size: clamp(17px, 1.5vw, 22px); font-stretch: 84%; line-height: 1.25; margin: 2px 0 0; font-weight: 700; max-width: none; text-wrap: balance; }
-.mast-sub { margin: 0; color: var(--mast-muted); font-size: 13.5px; line-height: 1.4; }
-.pref { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mast-inner { max-width: 1400px; margin: 0 auto; padding-block: 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px 20px; flex-wrap: wrap; }
+.masthead h1 { flex: 1 1 520px; min-width: 0; font-size: clamp(15px, 1.25vw, 19px); font-stretch: 84%; line-height: 1.25; margin: 0; font-weight: 700; max-width: none; text-wrap: balance; }
+.pref { display: flex; align-items: center; gap: 8px; flex: none; }
 .pref-label { font: 600 10.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mast-muted); }
 .seg { display: inline-flex; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 2px; gap: 2px; flex-wrap: wrap; }
 .seg label { position: relative; cursor: pointer; }
@@ -382,19 +379,15 @@ table.matrix td.st .pill + .cites { margin-top: 4px; }
 <div class="shell" id="shell">
   <header class="masthead">
     <div class="mast-inner">
-      <div class="mast-top">
-        <p class="eyebrow">Research dashboard · November 2026</p>
-        <div class="pref" role="radiogroup" aria-labelledby="pref-label">
-          <span id="pref-label" class="pref-label">Open reports in</span>
-          <div class="seg">
-            <label><input type="radio" name="openpref" id="pref-ask" value="ask" checked><span>Ask each time</span></label>
-            <label><input type="radio" name="openpref" id="pref-panel" value="panel"><span>Side panel</span></label>
-            <label><input type="radio" name="openpref" id="pref-tab" value="tab"><span>New tab</span></label>
-          </div>
+      <h1 title="A comparative study of India, the United States, the United Kingdom, Japan, Australia, Canada and France">Defence Financial Reporting Systems: Benchmarking with Global Best Practices and Alignment with Outcome Monitoring and Evaluation</h1>
+      <div class="pref" role="radiogroup" aria-labelledby="pref-label">
+        <span id="pref-label" class="pref-label">Open reports in</span>
+        <div class="seg">
+          <label><input type="radio" name="openpref" id="pref-ask" value="ask" checked><span>Ask each time</span></label>
+          <label><input type="radio" name="openpref" id="pref-panel" value="panel"><span>Side panel</span></label>
+          <label><input type="radio" name="openpref" id="pref-tab" value="tab"><span>New tab</span></label>
         </div>
       </div>
-      <h1>Defence Financial Reporting Systems: Benchmarking with Global Best Practices and Alignment with Outcome Monitoring and Evaluation</h1>
-      <p class="mast-sub">A comparative study of India, the United States, the United Kingdom, Japan, Australia, Canada and France</p>
     </div>
   </header>
   <nav class="tabbar" aria-label="Dashboard sections"><div class="tabs" role="tablist"><a role="tab" class="tab" id="tab-booklet" href="#booklet" aria-controls="panel-booklet" aria-selected="false"><span class="tab-label">Research Booklet</span><span class="tab-badge">§1–7</span></a><a role="tab" class="tab" id="tab-catalogue" href="#catalogue" aria-controls="panel-catalogue" aria-selected="false"><span class="tab-label">Report Catalogue</span><span class="tab-badge">45</span></a><a role="tab" class="tab" id="tab-common" href="#common" aria-controls="panel-common" aria-selected="false"><span class="tab-label">Common Reports</span><span class="tab-badge">3</span></a><a role="tab" class="tab" id="tab-disclosures" href="#disclosures" aria-controls="panel-disclosures" aria-selected="false"><span class="tab-label">Extra Disclosures</span><span class="tab-badge">11</span></a><a role="tab" class="tab" id="tab-benchmark" href="#benchmark" aria-controls="panel-benchmark" aria-selected="false"><span class="tab-label">Benchmark Practices</span><span class="tab-badge">14</span></a><a role="tab" class="tab" id="tab-outcomes" href="#outcomes" aria-controls="panel-outcomes" aria-selected="false"><span class="tab-label">Outcome Monitoring &amp; Evaluation</span><span class="tab-badge">6</span></a><a role="tab" class="tab" id="tab-insights" href="#insights" aria-controls="panel-insights" aria-selected="false"><span class="tab-label">Insights for India</span><span class="tab-badge">19</span></a></div></nav>
