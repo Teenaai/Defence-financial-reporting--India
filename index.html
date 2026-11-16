@@ -74,12 +74,13 @@ h1, h2, h3, h4, h5 { font-family: var(--f-display); text-wrap: balance; letter-s
 
 /* masthead */
 .masthead { background: var(--mast); color: var(--mast-ink); }
-.mast-inner { max-width: 1400px; margin: 0 auto; padding-block: 28px 24px; display: flex; gap: 24px 40px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; }
-.mast-text { flex: 1 1 520px; min-width: 0; }
+.mast-inner { max-width: 1400px; margin: 0 auto; padding-block: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center; }
+.mast-text { width: 100%; min-width: 0; display: flex; flex-direction: column; align-items: center; }
 .masthead .eyebrow { color: var(--mast-muted); }
-.masthead h1 { font-size: clamp(22px, 2.6vw, 34px); line-height: 1.15; margin: 0 0 8px; font-weight: 700; max-width: 30ch; }
-.mast-sub { margin: 0; color: var(--mast-muted); max-width: 70ch; }
-.pref { display: flex; flex-direction: column; gap: 6px; }
+.masthead h1 { font-size: clamp(22px, 2.5vw, 34px); line-height: 1.2; margin: 0 0 10px; font-weight: 700; max-width: 46ch; text-wrap: balance; }
+.mast-sub { margin: 0; color: var(--mast-muted); max-width: 70ch; text-wrap: balance; }
+.pref { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.seg { justify-content: center; }
 .pref-label { font: 600 10.5px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mast-muted); }
 .seg { display: inline-flex; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 3px; gap: 2px; flex-wrap: wrap; }
 .seg label { position: relative; cursor: pointer; }
@@ -316,6 +317,10 @@ table.matrix td:nth-child(2) { background: var(--india-soft); }
 .chooser-actions .btn { justify-content: center; white-space: normal; text-align: center; }
 .chooser-remember { display: flex; gap: 6px; align-items: center; margin-top: 10px; font-size: 12.5px; color: var(--muted); cursor: pointer; }
 .tip { position: fixed; z-index: 55; max-width: 360px; background: var(--ink); color: var(--bg); font-size: 12.5px; line-height: 1.45; padding: 8px 10px; border-radius: 6px; pointer-events: none; }
+
+.chooser-only { margin: -4px 0 10px; font-size: 12.5px; color: var(--muted); }
+.chooser-actions.single { grid-template-columns: 1fr; }
+.toast { position: fixed; z-index: 70; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: max-content; max-width: calc(100vw - 32px); background: var(--ink); color: var(--bg); font-size: 13.5px; line-height: 1.45; padding: 10px 14px; border-radius: 8px; box-shadow: var(--shadow); }
 
 /* responsive */
 @media (max-width: 1100px) {
@@ -820,6 +825,7 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
   <div class="viewer-mode" id="viewer-mode" hidden>
     <span class="lbl">Show this PDF</span>
     <div class="seg2" role="group" aria-label="How to show this PDF">
+      <button type="button" data-mode="local" aria-pressed="false" hidden>Saved copy</button>
       <button type="button" data-mode="gview" aria-pressed="true">Through Google viewer</button>
       <button type="button" data-mode="direct" aria-pressed="false">Directly from the site</button>
     </div>
@@ -838,7 +844,8 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
 <div class="chooser" id="chooser" role="dialog" aria-modal="false" aria-labelledby="chooser-title" hidden>
   <p class="chooser-kicker">Reference <span id="chooser-n"></span></p>
   <p class="chooser-title" id="chooser-title"></p>
-  <div class="chooser-actions">
+  <p class="chooser-only" id="chooser-only" hidden>Indian government websites don’t allow display in the side panel, so this report opens in a new tab.</p>
+  <div class="chooser-actions" id="chooser-actions">
     <button type="button" class="btn primary" id="chooser-panel">Open in side panel</button>
     <a class="btn" id="chooser-tab" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
   </div>
@@ -846,6 +853,7 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
 </div>
 
 <div class="tip" id="tip" role="tooltip" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <script type="application/json" id="refs-data">{"1": {"title": "Ministry of Finance, Notes on Demands for Grants 2026–27, Demand No. 21, Capital Outlay on Defence Services. The table is on the first page. This address always shows the current budget year, so its content will change after February 2027.", "url": "https://www.indiabudget.gov.in/doc/eb/sbe21.pdf"}, "2": {"title": "Union Government, Appropriation Accounts of the Defence Services 2007–08. Held in the CAG archive. It shows the layout: a summary, grant-wise accounts and the CAG certificate.", "url": "https://calm.cag.gov.in//storage/media/6vSxdyEZ58fVRay4XzMM2affXRsIJntqH4DqcFER.pdf"}, "3": {"title": "Controller General of Accounts, Accounts at a Glance 2023–24. Read the Introduction, which says who prepares the Defence appropriation accounts.", "url": "https://cga.nic.in/writereaddata/file/Accounts%20at%20a%20Glance%202023-24%20English.pdf"}, "4": {"title": "CAG of India, Report No. 16 of 2025, Accounts of the Union Government for the year ended March 2024. Read Chapter 1 on the four sets of appropriation accounts.", "url": "https://cag.gov.in/webroot/uploads/download_audit_report/2025/Report-No.-16-of-2025-,-Union-Government(new)Digitally-Signed-0689caffc65bad5.68844459.pdf"}, "5": {"title": "Ministry of Defence (India), Annual Reports page. Lists the Annual Report 2024–2025 and earlier years.", "url": "https://www.ddpmod.gov.in/documents/annual-reports"}, "6": {"title": "Ministry of Defence, Annual Report and Accounts 2025 to 2026. Laid in Parliament on 15 July 2026.", "url": "https://www.gov.uk/government/publications/ministry-of-defence-annual-report-and-accounts-2025-to-2026"}, "7": {"title": "Department of Defense, Agency Financial Report FY 2025, Financial Section. Contains the Inspector General’s audit report of 18 December 2025, the main statements and the notes.", "url": "https://comptroller.war.gov/Portals/45/Documents/afr/fy2025/4_Financial_Section.pdf"}, "8": {"title": "National Audit Office, Ministry of Defence Accounts 2024–25. Gives the auditor’s qualified opinions and the reasons for them.", "url": "https://www.nao.org.uk/reports/ministry-of-defence-accounts-2024-25/"}, "9": {"title": "Under Secretary (Comptroller), FY 2026 Budget Materials. The page lists every budget book: P-1, R-1, O-1, M-1, C-1, RF-1 and others.", "url": "https://comptroller.war.gov/Budget-Materials/Budget2026/pubDate/20251103/"}, "10": {"title": "Australian National Audit Office, 2024–25 Major Projects Report. Auditor-General Report No. 16 of 2025–26.", "url": "https://anao.gov.au/work/major-projects-report/2024-25-major-projects-report"}, "11": {"title": "UK Ministry of Defence, MOD trade, industry and contracts: 2025. Official statistics, published 25 September 2025.", "url": "https://www.gov.uk/government/statistics/mod-trade-industry-and-contracts-2025/mod-trade-industry-and-contracts-2025"}, "12": {"title": "UK Ministry of Defence, Armed Forces Pension Scheme annual accounts 2024 to 2025. HC 1309, published 17 December 2025.", "url": "https://www.gov.uk/government/publications/armed-forces-pension-scheme-annual-accounts-2024-to-2025"}, "13": {"title": "Department of National Defence (Canada), Quarterly Financial Report for the quarter ended 31 December 2025.", "url": "https://www.canada.ca/en/department-national-defence/corporate/reports-publications/quarterly-financial/december-31-2025.html"}, "14": {"title": "Department of National Defence and Canadian Armed Forces, 2024–25 Departmental Results Report.", "url": "https://publications.gc.ca/collections/collection_2025/mdn-dnd/D3-41-2025-eng.pdf"}, "15": {"title": "Assemblée nationale, Finance Committee amendment CF863 on the “restes à payer” of Mission Défense. Gives the 2025 figure for commitments not yet paid.", "url": "https://www.assemblee-nationale.fr/dyn/17/amendements/1906C/CION_FIN/CF863"}, "16": {"title": "Ministry of Defense (Japan), Progress and Budget in Fundamental Reinforcement of Defense Capabilities: Overview of FY2026 Budget. Read the pages on expense classifications and categories by use.", "url": "https://www.mod.go.jp/en/d_act/d_budget/pdf/fy2026_20251226a.pdf"}, "17": {"title": "MP-IDSA, Ministry of Defence 2026–27 Budget Estimates: An Analysis. Issue brief dated 13 February 2026. Read the summary table of the four demands.", "url": "https://idsa.in/publisher/issuebrief/ministry-of-defence-2026-27-budget-estimates-an-analysis"}, "18": {"title": "US Department of Defense, Military Retirement Fund Audited Financial Report, Fiscal Year 2025. Dated 7 November 2025.", "url": "https://comptroller.war.gov/Portals/45/Documents/afr/fy2025/DoD_Components/2025_AFR_MRF.pdf"}, "19": {"title": "Government of Canada, Canadian Armed Forces Pension Plans Annual Report for the Fiscal Year ended 31 March 2025.", "url": "https://www.canada.ca/en/public-services-procurement/services/pay-pension/canadian-armed-forces/annual-reports/2025.html"}, "20": {"title": "Ministry of Finance, Output Outcome Monitoring Framework 2026–27. Read the Preface and the Table of Contents on pages 1 to 3, which list every ministry covered.", "url": "https://www.indiabudget.gov.in/doc/OutcomeBudgetE2026_2027.pdf"}, "21": {"title": "Ministry of Defense, Outline of Ministry Financial Statements FY2024. Read pages 4 to 6 for the balance sheet and the cost statement.", "url": "https://www.mod.go.jp/j/budget/zaimu/fy2024/shochobetsu_digest_fy2024.pdf"}, "22": {"title": "Public Accounts Committee, Thirty-ninth Report (18th Lok Sabha), Excesses over Voted Grants and Charged Appropriations 2022–23. Read the Introduction, paragraph 2, for the dates on which the accounts were laid.", "url": "https://eparlib.sansad.in/bitstream/123456789/3019800/1/18_Public_Accounts_39.pdf"}, "23": {"title": "Congressional Research Service, Defense Primer: FY2025 Department of Defense Audit Results. Dated 28 April 2026. It explains the types of audit opinion in plain words.", "url": "https://www.everycrsreport.com/files/2026-04-28_IF12627_a0aaa98fa9bd10c7d612eaea7793e46ec9b96ed0.html"}, "24": {"title": "Kumar, Best Practices in Financial Management: Accrual Accounting for Defence. Institute for Defence Studies and Analyses, Monograph No. 66. The author is an Indian Defence Accounts Service officer.", "url": "https://www.idsa.in/system/files/monograph/monograph66.pdf"}, "25": {"title": "National Audit Office, Ministry of Defence Accounts 2025–26.", "url": "https://www.nao.org.uk/reports/ministry-of-defence-accounts-2025-26/"}, "26": {"title": "IFRS Foundation, Conceptual Framework for Financial Reporting (2026 issued edition). Read Chapter 1, paragraphs 1.2 to 1.5, on investors, lenders and other creditors.", "url": "https://www.ifrs.org/content/dam/ifrs/publications/html-standards/english/2026/issued/cf.html"}, "27": {"title": "IPSASB, Conceptual Framework for General Purpose Financial Reporting by Public Sector Entities. Published by the International Public Sector Accounting Standards Board. Read Chapter 2, Objectives and Users.", "url": "https://www.ipsasb.org/publications/conceptual-framework-general-purpose-financial-reporting-public-sector-entities-chapters-1-4"}, "28": {"title": "Gillibrand and Hilton (1998), Resource Accounting and Budgeting: The MoD Case. Public Money & Management, 18(2), 21–28. DOI 10.1111/1467-9302.00111.", "url": "https://ideas.repec.org/a/taf/pubmmg/v18y1998i2p21-28.html"}, "29": {"title": "Ministry of Finance, Notes on Demands for Grants 2026–27, Demand No. 20, Defence Services (Revenue). Read the table of heads for the Army, Navy and Air Force. This address always shows the current budget year.", "url": "https://www.indiabudget.gov.in/doc/eb/sbe20.pdf"}, "30": {"title": "Controller General of Defence Accounts, Defence Accounts Code 2025. Read Chapter 2 on appropriation accounts.", "url": "https://cgda.nic.in/accounts/DAC2025.pdf"}, "31": {"title": "Controller General of Defence Accounts, Defence Audit Code 2022. Read the Introduction on the annual audit certificate and the preparation of appropriation accounts.", "url": "https://www.cgda.nic.in/audit/Defence%20Audit%20Code%202022.pdf"}, "32": {"title": "Controller General of Accounts, Summary of Appropriation Accounts 2023–24. Read the footnote on Grants 20 and 21, Defence Services.", "url": "https://cga.nic.in/writereaddata/AppAccount/FY20232024/SummaryAppAcc20232024.pdf"}, "33": {"title": "UN Office for Disarmament Affairs, note verbale on national submissions to the UN Report on Military Expenditures (2025).", "url": "https://unodaweb.unoda.org/public/2025-12/NV-UNMILEX-2025.pdf"}, "34": {"title": "Standing Committee on Defence, Fortieth Report (16th Lok Sabha), Demands for Grants 2018–19. Read paragraphs 1.1 to 1.3 on the four grants and the Defence Services Estimates.", "url": "https://eparlib.sansad.in/bitstream/123456789/762354/1/16_Defence_40.pdf"}, "35": {"title": "Ministry of Finance, Detailed Demands for Grants, Demand No. 20. Read the Revenue Section for the major heads and the receipt heads of each service. This address always shows the current budget year.", "url": "https://www.indiabudget.gov.in/doc/eb/dg20.pdf"}, "36": {"title": "CAG of India, Report No. 2 of 2019, Accounts of the Union Government, Chapter 3. Read Table 3.1 for the excess spending under Grants 20 and 21.", "url": "https://cag.gov.in/uploads/download_audit_report/2019/Chapter_3_Comments_on_Appropriation_Accounts_of_Report_No_2_of_2019_Accounts_of_the_Union_Government_Financial_Audit.pdf"}, "37": {"title": "CAG of India, press release on Audit Report No. 28 of 2025, Defence Services (Army). Dated 18 December 2025.", "url": "https://cag.gov.in/uploads/PressRelease/PR-Press-Brief-Report-No-28-of-2025-english-06944f3569fc990-08485789.pdf"}, "38": {"title": "CAG of India, Report No. 26 of 2017, Performance Audit on Disbursement of Defence Pension. The page lists every chapter of the report.", "url": "https://cag.gov.in/en/audit-report/details/31829"}, "39": {"title": "Under Secretary (Comptroller), Program Acquisition Cost by Weapon System, FY 2026. Read the Introduction.", "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/FY2026_Weapons.pdf"}, "40": {"title": "US Under Secretary of Defense (Comptroller), Defense Operations and Maintenance Overview, Fiscal Year 2026 Budget Request. Dated July 2025.", "url": "https://comptroller.defense.gov/Portals/45/Documents/defbudget/FY2026/FY2026_OM_Overview.pdf"}, "41": {"title": "US Department of Defense, Agency Financial Report FY 2025, Management’s Discussion and Analysis. Explains spending by type of appropriation.", "url": "https://comptroller.war.gov/Portals/45/Documents/afr/fy2025/3_Managements_Discussion_and_Analysis_MDA.pdf"}, "42": {"title": "US Under Secretary of Defense (Comptroller), Fiscal Year 2024 Financial Statement Audits Fact Sheet. Dated 15 November 2024. Read page 1 for the list of units with clean opinions.", "url": "https://media.defense.gov/2024/Nov/15/2003584851/-1/-1/0/FISCAL-YEAR-2024-DEPARTMENT-OF-DEFENSE-FINANCIAL-STATEMENT-AUDIT-FACT-SHEET.PDF"}, "43": {"title": "DoD Office of Inspector General, press release on the FY 2025 financial statement audit.", "url": "https://www.dodig.mil/In-the-Spotlight/Article/4365200/press-release-independent-auditors-reports-on-the-dod-fy-2025-financial-stateme"}, "44": {"title": "US Government Accountability Office, Weapon Systems Acquisitions 2026 update. The page lists GAO-26-108457, the 2026 Weapon Systems Annual Assessment.", "url": "https://files.gao.gov/cnsa/2026reports.html"}, "45": {"title": "US Government Accountability Office, GAO-25-108052, Insights into the Auditability of DOD’s Fiscal Year 2024 Balance Sheet. Published on 18 September 2025.", "url": "https://files.gao.gov/reports/GAO-25-108052/index.html"}, "46": {"title": "UK Ministry of Defence, MOD departmental resources: 2025. Official statistics, published 15 January 2026.", "url": "https://www.gov.uk/government/statistics/defence-departmental-resources-2025/mod-departmental-resources-2025"}, "47": {"title": "National Audit Office, The Equipment Plan 2023 to 2033. Published on 4 December 2023.", "url": "https://www.nao.org.uk/reports/the-equipment-plan-2023-to-2033/"}, "48": {"title": "Ministry of Defense, Administrative Project Review page (FY2023). Explains the review sheets and the public review process.", "url": "https://www.mod.go.jp/j/policy/hyouka/rev_suishin/review_r5.html"}, "49": {"title": "Ministry of Defense, Administrative Project Review Action Plan FY2024.", "url": "https://www.mod.go.jp/j/policy/hyouka/kaigi/pdf/r06_review_koudoukeikaku.pdf"}, "50": {"title": "Australian National Audit Office, Defence portfolio work program 2026–27. Gives the Portfolio Budget Statements total for 2026–27.", "url": "https://www.anao.gov.au/work-program/portfolio/defence"}, "51": {"title": "Australian Department of Defence, Annual Reports page. Lists the Defence Annual Report 2024–2025 and earlier years.", "url": "https://defence.gov.au/annualreports"}, "52": {"title": "Australian Department of Finance, Statistics on Australian Government Procurement Contracts. Explains AusTender and the 42-day reporting rule.", "url": "https://www.finance.gov.au/government/procurement/statistics-australian-government-procurement-contracts-"}, "53": {"title": "Australian National Audit Office, Audits of the Financial Statements of Australian Government Entities for the Period Ended 30 June 2025. Read the Executive summary.", "url": "https://www.anao.gov.au/work/financial-statement-audit/audits-of-the-financial-statements-of-australian-government-entities-the-period-ended-30-june-2025"}, "54": {"title": "Australian Department of Finance, Audit Report of the 2024–25 annual performance statements, Department of Defence.", "url": "https://www.finance.gov.au/publications/reports/audit-report-2024-25-annual-performance-statements-department-defence"}, "55": {"title": "Department of National Defence (Canada), Main Estimates 2024–25, page proofs. Shows Vote 1 (operating) and Vote 5 (capital).", "url": "https://www.canada.ca/en/department-national-defence/corporate/reports-publications/proactive-disclosure/nddn-main-estimates-2024-2025/page-proofs-dnd.html"}, "56": {"title": "Department of National Defence, 2025–26 Departmental Plan: At a glance.", "url": "https://www.canada.ca/en/department-national-defence/corporate/reports-publications/departmental-plans/departmental-plan-2025-26/plans-at-glance.html"}, "57": {"title": "Department of National Defence, Planned costs for major Canadian Armed Forces operations. Supporting document to the 2024–25 Departmental Plan.", "url": "https://www.canada.ca/en/department-national-defence/corporate/reports-publications/departmental-plans/departmental-plan-2024-25/supporting-document.html"}, "58": {"title": "Department of National Defence, Consolidated Departmental Financial Statements 2024–25 (Unaudited).", "url": "https://www.canada.ca/en/department-national-defence/corporate/reports-publications/departmental-results-report/2024-25-index/financial-statements.html"}, "59": {"title": "Government of France, Projet annuel de performances 2026, Mission Défense. Annex to the 2026 budget bill. Read the contents page for the four programmes.", "url": "https://www2.assemblee-nationale.fr/static/17/Annexes-DL/PLF-2026/PAP2026_BG_Defense_DA.pdf"}, "60": {"title": "Government of France, Rapport annuel de performances 2023, Mission Défense. Annex to the annual accounts law. Read the contents page and the introduction.", "url": "https://www2.assemblee-nationale.fr/static/16/pdf/RAP2023_BG_Defense_DA.pdf"}, "61": {"title": "Government of France, Projet annuel de performances 2026, Compte d’affectation spéciale Pensions. Annex to the 2026 budget bill. Read the presentation of programmes 741 and 743.", "url": "https://www.assemblee-nationale.fr/dyn/dyn/contenu/visualisation/1088071/file/PAP2026_CS_CAS_Pensions_YD.pdf"}, "62": {"title": "Assemblée nationale, amendment CF23 quoting the Cour des comptes budget-execution analysis of Mission Défense.", "url": "https://www.assemblee-nationale.fr/dyn/16/amendements/1033/CION_FIN/CF23.pdf"}, "63": {"title": "UK National Audit Office (2001), Ministry of Defence Departmental Resource Accounts 2000–01. Read Section 1, Summary, on stock and fixed-asset values the auditor could not confirm.", "url": "https://www.nao.org.uk/wp-content/uploads/2001/12/0102443.pdf"}, "64": {"title": "DMEO, NITI Aayog, Output Outcome Monitoring Framework: Bulletin of Key Terms.", "url": "https://dmeo.gov.in/sites/default/files/2023-07/OOMF-Bulletin-of-Key-Terms-1.pdf"}}</script>
 <script>
 (function () {
@@ -950,29 +958,63 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
     direct: "Shown directly from the official site. If the area below stays blank or shows an error, switch to <strong>Through Google viewer</strong> or use <strong>Open in new tab</strong>.",
     page: "Some official sites refuse to display inside another page. If the area below stays blank or shows an error, use <strong>Open in new tab</strong>."
   };
+  // Saved copies: reports/ref-<n>.pdf next to index.html (e.g. on GitHub Pages).
+  // Same-site files always display in the panel, so they are used first when present.
+  var localCache = {};
+  function localUrl(n) { return "reports/ref-" + n + ".pdf"; }
+  function checkLocal(n) {
+    if (n in localCache) return Promise.resolve(localCache[n]);
+    if (!/^https?:$/.test(location.protocol) || !window.fetch) { localCache[n] = false; return Promise.resolve(false); }
+    return fetch(localUrl(n), { method: "HEAD", cache: "no-cache" })
+      .then(function (res) { var ok = res.ok && !/text\/html/i.test(res.headers.get("content-type") || ""); localCache[n] = ok; return ok; })
+      .catch(function () { localCache[n] = false; return false; });
+  }
+  NOTES.local = "Showing a copy of this report saved on this website, because the official site does not allow display in side panels. Use <strong>Open in new tab</strong> to see the original on the official site.";
   function renderViewer(force) {
-    var r = REFS[currentRef]; if (!r) return;
-    var pdf = isPdf(r.url), blocked = noFrame(r.url);
-    var mode = pdf ? (pdfMode || (blocked ? "gview" : "direct")) : null;
-    $("viewer-mode").hidden = !pdf;
-    document.querySelectorAll("#viewer-mode [data-mode]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === mode ? "true" : "false"); });
-    var showCard = !pdf && blocked;
-    $("viewer-blocked").hidden = !showCard;
-    $("viewer-frame-wrap").hidden = showCard;
-    $("viewer-note").hidden = showCard;
-    $("viewer-blocked-open").href = r.url;
-    $("viewer-note").innerHTML = pdf ? NOTES[mode] : NOTES.page;
-    var src = showCard ? null : (mode === "gview" ? gview(r.url) : r.url);
-    if (!src) { frame.removeAttribute("src"); return; }
-    if (force || frame.getAttribute("src") !== src) { frame.removeAttribute("src"); frame.setAttribute("src", src); }
+    var n = currentRef, r = REFS[n]; if (!r) return;
+    checkLocal(n).then(function (hasLocal) {
+      if (currentRef !== n) return;
+      var pdf = isPdf(r.url), blocked = noFrame(r.url);
+      var mode = (pdf || hasLocal) ? (pdfMode || (hasLocal ? "local" : blocked ? "gview" : "direct")) : null;
+      if (mode === "local" && !hasLocal) mode = blocked ? "gview" : "direct";
+      $("viewer-mode").hidden = !(pdf || hasLocal);
+      document.querySelectorAll("#viewer-mode [data-mode]").forEach(function (b) {
+        if (b.dataset.mode === "local") b.hidden = !hasLocal;
+        else b.hidden = !pdf;
+        b.setAttribute("aria-pressed", b.dataset.mode === mode ? "true" : "false");
+      });
+      var showCard = !mode && blocked;
+      $("viewer-blocked").hidden = !showCard;
+      $("viewer-frame-wrap").hidden = showCard;
+      $("viewer-note").hidden = showCard;
+      $("viewer-blocked-open").href = r.url;
+      $("viewer-note").innerHTML = mode ? NOTES[mode] : NOTES.page;
+      var src = showCard ? null : mode === "local" ? localUrl(n) : mode === "gview" ? gview(r.url) : r.url;
+      if (!src) { frame.removeAttribute("src"); return; }
+      if (force || frame.getAttribute("src") !== src) { frame.removeAttribute("src"); frame.setAttribute("src", src); }
+    });
   }
   document.querySelectorAll("#viewer-mode [data-mode]").forEach(function (b) {
     b.addEventListener("click", function () { pdfMode = b.dataset.mode; renderViewer(); });
   });
   $("viewer-reload").addEventListener("click", function () { renderViewer(true); });
 
+  function panelOk(n) { var r = REFS[n]; return !!r && (!noFrame(r.url) || localCache[n] === true); }
+  var toastTimer = null;
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.hidden = true; }, 4500);
+  }
+  // look for saved copies up front, so the choice below can be made at click time
+  Object.keys(REFS).forEach(function (k) { if (noFrame(REFS[k].url)) checkLocal(+k); });
+
   function openPanel(n) {
     var r = REFS[n]; if (!r) return;
+    if (!panelOk(n)) {
+      openTab(n);
+      toast("Report [" + n + "] opened in a new tab. Indian government websites don’t allow display in the side panel.");
+      return;
+    }
     if (currentRef !== n) pdfMode = null;
     currentRef = n;
     $("viewer-n").textContent = "[" + n + "]";
@@ -1046,13 +1088,19 @@ correction.</h4><p>The United Kingdom's defence accounts were criticised by the 
     $("chooser-title").textContent = r.title;
     $("chooser-tab").href = r.url;
     $("chooser-remember").checked = false;
+    hideTip();
+    var ok = panelOk(n);
+    $("chooser-panel").hidden = !ok;
+    $("chooser-only").hidden = ok;
+    $("chooser-actions").classList.toggle("single", !ok);
+    $("chooser-remember").parentNode.hidden = !ok;
     chooser.hidden = false;
     var b = anchor.getBoundingClientRect(), cw = chooser.offsetWidth, ch = chooser.offsetHeight;
     var left = Math.min(Math.max(12, b.left + b.width / 2 - cw / 2), window.innerWidth - cw - 12);
     var top = b.bottom + 8;
     if (top + ch > window.innerHeight - 12) top = Math.max(12, b.top - ch - 8);
     chooser.style.left = left + "px"; chooser.style.top = top + "px";
-    $("chooser-panel").focus({ preventScroll: true });
+    (ok ? $("chooser-panel") : $("chooser-tab")).focus({ preventScroll: true });
   }
   function closeChooser() { chooser.hidden = true; chooserRef = null; }
   $("chooser-panel").addEventListener("click", function () {
